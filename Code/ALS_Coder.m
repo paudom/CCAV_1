@@ -1,0 +1,10 @@
+cd(path_mus);
+mus_struct=audioinfo('Love On The Brain.flac');
+samples = 1000;
+NumChannels = mus_struct.NumChannels;
+SampleRate = mus_struct.SampleRate;
+BitsxSample = mus_struct.BitsPerSample;
+Orig_signal=audioread('Love On The Brain.flac','native');
+cd(path_code);
+[frame]=ALS_buffer(Orig_signal,samples);
+
