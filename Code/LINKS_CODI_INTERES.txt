@@ -1,0 +1,8 @@
+Levinson Durbin Algo
+https://es.mathworks.com/matlabcentral/fileexchange/64086-the-levinson-durbin-algorithm?focused=8043827&tab=function
+
+LPC to PARCOR
+https://es.mathworks.com/matlabcentral/fileexchange/45435-lpc-frame?focused=3877056&tab=function
+
+PARCOR to LPC 
+https://es.mathworks.com/matlabcentral/fileexchange/46039-functions-lrr?focused=3811740&tab=function
