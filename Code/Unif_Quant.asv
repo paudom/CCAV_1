@@ -1,0 +1,30 @@
+function [quantized_output] = Unif_Quant(input_signal,type)
+
+  % -- Declaration of variables -- %
+    input_max = ceil(max(input_signal)); 
+    input_min = floor(min(input_signal));
+    %Funciona per números decimals,pensant que el rang és entre -1 i 1...
+    %però si no és així s'hauria de pensar com fer-ho o! posar directament
+    %els paràmetres del rang.
+    b = 12; %Pensar si es passa com a paràmetre
+    Q = (input_max-input_min)/pow2(b);
+    quantized_output = zeros(1,length(input_signal));
+    
+  % -- Quantization -- %
+    for n=1:length(input_signal)
+    for k=0:1:(k_max-1)
+        if (((k*delta)<=abs(signal(i)))&&(abs(signal(i))<=((k+1)*delta)))
+            if(signal(i)>0)
+                new_signal(i)=(0.5+k)*delta;
+            elseif(signal(i)<0)
+                new_signal(i)=(-0.5-k)*delta;
+            elseif(signal(i)==0)    
+                new_signal(i)=0;
+            end 
+        end
+            
+    end
+end
+    end
+end
+
