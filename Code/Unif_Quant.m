@@ -13,12 +13,12 @@ function [quantized_output] = Unif_Quant(input_signal)
     
   % -- Quantization -- %
     for i=1:length(input_signal)
-        for k=0:1:(k_max-1)
-            if (((k*Q)<=abs(input_signal(i)))&&(abs(input_signal(i))<=((k+1)*Q)))
+        for k=1:k_max
+            if ((((k-1)*Q)<=abs(input_signal(i)))&&(abs(input_signal(i))<=(k*Q)))
                 if(input_signal(i)>0)
-                    quantized_output(i)=(0.5+k)*Q;
+                    quantized_output(i)=(0.5+(k-1))*Q;
                 elseif(input_signal(i)<0)
-                    quantized_output(i)=(-0.5-k)*Q;
+                    quantized_output(i)=(-0.5-(k-1))*Q;
                 elseif(input_signal(i)==0)    
                     quantized_output(i)=0;
                 end 
