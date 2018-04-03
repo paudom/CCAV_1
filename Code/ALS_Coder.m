@@ -1,10 +1,13 @@
-cd(path_mus);
-mus_struct=audioinfo('Love On The Brain.flac');
-samples = 512;
-NumChannels = mus_struct.NumChannels;
-SampleRate = mus_struct.SampleRate;
-BitsxSample = mus_struct.BitsPerSample;
-Orig_signal=audioread('Love On The Brain.flac','native');
-cd(path_code);
-[frame]=ALS_buffer(Orig_signal,samples);
+%% -- ALS_CODER -- %%
+% -- This function acts as a coder -- %%
+
+function bitstream = ALS_Coder(audio_signal,audio_struct)
+
+	%% -- DECLARATION OF VARIABLES -- %%
+	frame_samples = 1024;
+	[frame_right,frame_left] = ALS_buffer(audio_signal,frame_samples);
+
+	%% -- CODING THE SIGNAL -- %%
+	
+end
 

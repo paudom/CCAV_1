@@ -1,6 +1,7 @@
-function [frame] = ALS_buffer(ori_sig,samples)
-    right=buffer(ori_sig(:,1),samples);
-    left=buffer(ori_sig(:,2),samples);
-    diff=left-right;
-    frame=[right;left];
+%% -- BUFFER -- %%
+% -- This function acts like a buffer -- %
+
+function [frame_right,frame_left] = ALS_buffer(audio_signal,frame_samples)
+    frame_right = buffer(audio_signal(:,1),frame_samples);
+    frame_left = buffer(audio_signal(:,2),frame_samples);
 end
