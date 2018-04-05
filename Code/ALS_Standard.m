@@ -8,6 +8,7 @@ clc
 
 %% -- DEFINING PATHS -- %%
 os = input('Please select "1" for WINDOWS and "2" for MACINTOSH');
+
 switch os
 	case 1
 		%% -- WINDOWS -- %%
