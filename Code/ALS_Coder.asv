@@ -20,12 +20,7 @@ function bitstream = ALS_Coder(audio_signal,audio_struct)
 	[alpha] = quantify_parcor(K);
 	
     %% -- DEQUANTIFICATION OF PARCOR VALUES -- %%
-    K_d = dequantify_parcor(alpha);
+    [K = dequantify_parcor(alpha);
     
-    %% -- PARCOR TO LPC COEFFICIENTS -- %%
-    P = parcor2lpc(K_d);
-    
-    %% -- LPC PREDICTOR -- %%
-   
 end
 
