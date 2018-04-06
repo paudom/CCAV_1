@@ -26,6 +26,11 @@ function bitstream = ALS_Coder(audio_signal,audio_struct)
     P = parcor2lpc(K_d);
     
     %% -- LPC PREDICTOR -- %%
-   
+    frame_right_p = filter(P,1,frame_right(:,125732));
+    
+    %% -- RESIDUAL SIGNAL -- %%
+    residual = frame_right(:,125732)-frame_right_p;
+    
+    
 end
 
