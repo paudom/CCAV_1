@@ -1,11 +1,12 @@
 %% -- QUANTIFY PARCOR COEFFICIENTS -- %%
-function [alpha, Q, xmin] = quantify_parcor(K)
+function [alpha] = quantify_parcor(K)
 
 	%% -- DEFINITION VARIABLES -- %%
-	ak = (2/pi)*asin(K);
-	xmin = min(ak);
+	ak = asin(K);
+    xmax = pi/2;
+	xmin = -pi/2;
 	N = 2^7;
-	Q = (max(ak)-xmin)/N;
+	Q = (xmax-xmin)/N;
 
 	%% -- QUANTIFICATION OF Ak -- %%
 	Code_book = floor((ak-xmin)/Q);
