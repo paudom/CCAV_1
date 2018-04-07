@@ -1,5 +1,5 @@
 %% -- DEQUANTIFY PARCOR COEFFICIENTS -- %%
-function [K] = dequantify_parcor(alpha)
+function [ K ] = dequantify_parcor(alpha)
 
 	%% -- DEFINITION VARIABLES -- %%
 	xmax = pi/2;

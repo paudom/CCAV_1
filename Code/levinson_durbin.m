@@ -30,7 +30,7 @@ function [ K ] = levinson_durbin(frame)
 		end
 		J(p+1)=J(p)*(1-K(p)^2);
 		b(p+1) = floor(log2(J(p+1)));
-		if(p > 1 && b(p+1)>b(p))
+		if(b(p+1)>b(p))
 			break;
 		end
 	end

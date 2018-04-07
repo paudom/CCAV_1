@@ -1,7 +1,7 @@
 %% -- ALS_CODER -- %%
 % -- This function acts as a coder -- %%
 
-function bitstream = ALS_Coder(audio_signal,audio_struct)
+function bitstream = ALS_Coder(audio_signal)
 
 	%% -- DECLARATION OF VARIABLES -- %%
 	frame_samples = 1024;
