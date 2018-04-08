@@ -10,7 +10,8 @@ function [ frame_windowed ] = apply_hamming(frame)
 
 	%% -- APPLYING THE HAMMING WINDOW -- %%
 	for i=1:cols
-		frame_windowed(:,i) = frame(:,i).*w;
-	end
+		frame_windowed(:,i) = double(frame(:,i)).*w;
+    end
+    frame_windowed = int16(frame_windowed);
 	
 end

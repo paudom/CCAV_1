@@ -1,23 +1,19 @@
 %% -- ALS_CODER -- %%
 % -- This function acts as a coder -- %%
 
-function bitstream = ALS_Coder(audio_signal)
-
-	%% -- DECLARATION OF VARIABLES -- %%
-	frame_samples = 1024;
-	[frame_right,frame_left] = ALS_buffer(audio_signal,frame_samples);
+function [bitstream,fstate] = ALS_Coder(frame,state)
 
 	%% -- APPLYING THE HAMMING WINDOW -- %%
-	frame_rw = apply_hamming(frame_right);
-	frame_lw = apply_hamming(frame_left);
-
-	%% -- ITERATION THROUGH FRAMES -- %%
+	frame_w = apply_hamming(frame);
 
 	%% -- LEVINSON DURBIN -- %%
-	K = levinson_durbin(frame_rw(:,125732));
+	K = levinson_durbin(frame_w(:,1));
 
 	%% -- QUANTIFICATION OF PARCOR VALUES -- %%
 	[alpha] = quantify_parcor(K);
+
+	%% -- CODING PARCORS -- %%
+	alpha_stream = alpha_coding(alpha);
 	
     %% -- DEQUANTIFICATION OF PARCOR VALUES -- %%
     K_d = dequantify_parcor(alpha);
@@ -26,11 +22,19 @@ function bitstream = ALS_Coder(audio_signal)
     P = parcor2lpc(K_d);
     
     %% -- LPC PREDICTOR -- %%
-    frame_right_p = filter(P,1,frame_right(:,125732));
+    if(state == 0)
+        [frame_p,fstate] = filter(P,1,frame(:,1));
+    else
+        [frame_p,fstate] = filter(P,1,frame(:,1),state);
+    end
     
     %% -- RESIDUAL SIGNAL -- %%
-    residual = frame_right(:,125732)-frame_right_p;
+    residual = frame(:,1)-int16(round(frame_p));
     
-    
+    %% -- GOLOMB RICE CODING THE RESIDUAL -- %%
+    [stream, m_coded] = golomb_rice_coding(residual);
+
+    %% -- MULTIPLEXING -- %%
+    bitstream = multiplexing(alpha_stream,m_coded,stream);
 end
 
