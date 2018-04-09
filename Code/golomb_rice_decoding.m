@@ -12,7 +12,7 @@ function [residual] = golomb_rice_decoding(stream,coded_m)
 	for i = 1:length(res_values)
 		value = res_value(i);
 		r(i) = bin2dec(value{1}(1:rembits));
-		q_value = res{1}(rembits+1:length(res{1}));
+		q_value = value{1}(rembits+1:length(value{1}));
 		q(i) = 0;
 		for j = 1:length(q_value)
 			if(q_value(j)=='1')
