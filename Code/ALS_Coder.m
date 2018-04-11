@@ -7,7 +7,7 @@ function [bitstream,fstate] = ALS_Coder(frame,state)
 	frame_w = apply_hamming(frame);
 
 	%% -- LEVINSON DURBIN -- %%
-	K = levinson_durbin(frame_w(:,1));
+	K = levinson_durbin(frame_w);
 
 	%% -- QUANTIFICATION OF PARCOR VALUES -- %%
 	[alpha] = quantify_parcor(K);
@@ -22,14 +22,10 @@ function [bitstream,fstate] = ALS_Coder(frame,state)
     P = parcor2lpc(K_d);
     
     %% -- LPC PREDICTOR -- %%
-    if(state == 0)
-        [frame_p,fstate] = filter(P,1,frame(:,1));
-    else
-        [frame_p,fstate] = filter(P,1,frame(:,1),state);
-    end
+	[frame_p,fstate] = filter(P,1,frame,state);
     
     %% -- RESIDUAL SIGNAL -- %%
-    residual = frame(:,1)-int16(round(frame_p));
+    residual = frame-int16(round(frame_p));
     
     %% -- GOLOMB RICE CODING THE RESIDUAL -- %%
     [stream, m_coded] = golomb_rice_coding(residual);

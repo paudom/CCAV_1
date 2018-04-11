@@ -17,8 +17,7 @@ switch os
 		path_code = '/Volumes/Productions/Alternas/UPC/4A/CCAV/CCAV_1/Code';
 end
 cd(path_mus);
-audio_signal = audioread(mus,'native');
-audio_struct = audioinfo(mus);
+[audio_signal,Fs] = audioread(mus,'native');
 cd(path_code);
 
 %% -- DECLARATION OF VARIABLES -- %%
@@ -31,17 +30,30 @@ frame_dec_l = zeros(frame_samples,cols);
 %% -- ITERATION THROUGH FRAMES -- %%
 
 %% -- INITIALIZATING STATES -- %%
-rstate = 0;lstate = 0;
+rstate = [];lstate = [];
+zero_frame = int16(zeros(frame_samples,1));
 
-%% -- CODER -- %%
-[rbitstream,frstate] = ALS_Coder(frame_right(:,1),rstate);
-[lbitstream,flstate] = ALS_Coder(frame_left(:,1),lstate);
-
-%% -- DECODER -- %%
-frame_dec_r(:,1) = ALS_Decoder(rbitstream);
-frame_dec_l(:,1) = ALS_Decoder(lbitstream);
-
+for j=1:cols
+	%% -- CODER -- %%
+	if(j == 1)
+		[rbitstream,frstate] = ALS_Coder(zero_frame,rstate); rstate = frstate;
+		[lbitstream,flstate] = ALS_Coder(zero_frame,lstate); lstate = flstate;
+	else
+		[rbitstream,frstate] = ALS_Coder(frame_right(:,j),rstate); rstate = frstate;
+		[lbitstream,flstate] = ALS_Coder(frame_left(:,j),lstate); lstate = flstate;
+	end
+	
+	rstate = [];lstate = [];
+	%% -- DECODER -- %%
+	if(j == 1)
+		[frame_dec_r(:,j),frstate] = ALS_Decoder(rbitstream,rstate,zero_frame); rstate = frstate;
+		[frame_dec_l(:,j),flstate] = ALS_Decoder(lbitstream,lstate,zero_frame); lstate = flstate;
+	else
+		[frame_dec_r(:,j),frstate] = ALS_Decoder(rbitstream,rstate,frame_dec_r(:,j-1)); rstate = frstate;
+		[frame_dec_l(:,j),flstate] = ALS_Decoder(lbitstream,lstate,frame_dec_l(:,j-1)); lstate = flstate;
+	end
+end
 %% -- RECONSTRUCTING AUDIO -- %%
-
-%% -- PLOTTING -- %%
-plotting_audios(audio_signal,audio_output); 
+output = audio_reconstructor(frame_dec_r,frame_dec_l);
+filename = strcat('Dec_',mus);
+audio_output = auidowrite(filename,output,Fs);

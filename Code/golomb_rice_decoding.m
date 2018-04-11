@@ -7,10 +7,11 @@ function [residual] = golomb_rice_decoding(stream,coded_m)
 
 	%% -- RESIDUAL EXTRACTION -- %%
 	res_values = strsplit(stream{1},'R');
-	r = zeros(1,length(res_values));
-	q = zeros(1,length(res_values));
-	for i = 1:length(res_values)
-		value = res_value(i);
+	r = zeros(1,length(res_values)-1);
+	q = zeros(1,length(res_values)-1);
+    residual = zeros(1,length(res_values)-1);
+	for i = 1:length(res_values)-1
+		value = res_values(i);
 		r(i) = bin2dec(value{1}(1:rembits));
 		q_value = value{1}(rembits+1:length(value{1}));
 		q(i) = 0;

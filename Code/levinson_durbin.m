@@ -42,6 +42,8 @@ function [ K ] = levinson_durbin(frame)
         end
         if(b(p+1)==b(p))
             iterations = iterations + 1;
+        else
+        	iterations=0;
         end
  	end
  	K = K(1:p-1);

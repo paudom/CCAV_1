@@ -1,7 +1,7 @@
 %% -- ALS_CODER -- %%
 % -- This function acts as a coder -- %%
 
-function [audio_output,audio_out_struct] = ALS_Decoder(bitstream)
+function [frame,fstate] = ALS_Decoder(bitstream,state,previous_frame)
 
 	%% -- DEMULTIPLEXING -- %%
 	[stream_alpha,coded_m,stream] = demultiplexing(bitstream);
@@ -14,7 +14,13 @@ function [audio_output,audio_out_struct] = ALS_Decoder(bitstream)
     
     %% -- PARCOR TO LPC COEFFICIENTS -- %%
     P = parcor2lpc(K_d);
-    
+
 	%% -- DECODE RESIDUAL -- %%
 	residual = golomb_rice_decoding(stream,coded_m);
+
+	%% -- DECODER LPC PREDICTOR -- %%
+	[frame_p,fstate] = filter(1,P,previous_frame);
+
+	%% -- RECUPERING THE LOSSLESS FRAME -- %%
+	frame = residual+frame_p;
 end
