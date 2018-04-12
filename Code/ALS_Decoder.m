@@ -19,8 +19,8 @@ function [frame,fstate] = ALS_Decoder(bitstream,state,previous_frame)
 	residual = golomb_rice_decoding(stream,coded_m);
 
 	%% -- DECODER LPC PREDICTOR -- %%
-	[frame_p,fstate] = filter(1,P,previous_frame);
+	[frame_p,fstate] = filter(1,P,previous_frame,state);
 
 	%% -- RECUPERING THE LOSSLESS FRAME -- %%
-	frame = residual+frame_p;
+	frame = int16(residual+round(frame_p));
 end

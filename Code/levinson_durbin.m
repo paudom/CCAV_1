@@ -3,11 +3,11 @@ function [ K ] = levinson_durbin(frame)
 
 	%% -- DEFINITION VARIABLES -- %%
 	N = length(frame);
- 	pmax = 127;
+ 	pmax = 10;
  	a = zeros(pmax,pmax); K = zeros(1,pmax);
  	A = zeros(1,pmax); J = zeros(1,pmax);
- 	b = zeros(1,pmax);
-    iterations = 0; maxiter = 5;
+%  	b = zeros(1,pmax);
+%   iterations = 0; maxiter = 5;
 
 	%% -- COMPUTE THE FRAME AUTOCORRELATION -- %%
 	R = zeros(1,N);
@@ -20,7 +20,7 @@ function [ K ] = levinson_durbin(frame)
     
  	%% -- LEVINSON DURBIN INITIALIZATION -- %%
  	a(1,1) = 1; J(1) = R(1);
- 	b(1) = floor(log2(J(1)));
+%  	b(1) = floor(log2(J(1)));
     
  	%% -- LEVINSON DURBIN RECURSION -- %%
  	for p = 1:pmax-1
@@ -36,16 +36,22 @@ function [ K ] = levinson_durbin(frame)
         end
         a(p+1,p+1) = K(p);
  		J(p+1)=J(p)*(1-K(p)^2);
- 		b(p+1) = floor(log2(abs(round(J(p+1)))));
- 		if(b(p+1)>b(p)|| iterations == maxiter)
- 			break;
-        end
-        if(b(p+1)==b(p))
-            iterations = iterations + 1;
-        else
-        	iterations=0;
-        end
+%  		b(p+1) = floor(log2(abs(round(J(p+1)))));
+%  		if(b(p+1)>b(p)|| iterations == maxiter)
+%  			break;
+%         end
+%         if(b(p+1)==b(p))
+%             iterations = iterations + 1;
+%         else
+%         	iterations=0;
+%         end
  	end
- 	K = K(1:p-1);
- 	
+%  	K = K(1:p-1);
+ 	for k=1:length(K)
+        if(K(k)>1)
+            K(k)=1;
+        elseif(K(k)<-1)
+            K(k)=-1;
+        end
+    end
 end
