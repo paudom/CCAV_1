@@ -47,11 +47,11 @@ function [ K ] = levinson_durbin(frame)
 %         end
  	end
 %  	K = K(1:p-1);
- 	for k=1:length(K)
-        if(K(k)>1)
-            K(k)=1;
-        elseif(K(k)<-1)
-            K(k)=-1;
-        end
-    end
+ 	ind_min = find(K<-1); ind_max = find(K>1);
+ 	if(isempty(ind_min)==0)
+ 		K(ind_min) = -1;
+ 	end
+ 	if(isempty(ind_max)==0)
+ 		K(ind_max) = 1;
+ 	end
 end

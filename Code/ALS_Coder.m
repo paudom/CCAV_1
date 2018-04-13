@@ -1,7 +1,7 @@
 %% -- ALS_CODER -- %%
 % -- This function acts as a coder -- %%
 
-function [bitstream,fstate] = ALS_Coder(frame,state,ini)
+function [bitstream] = ALS_Coder(prev_frame,frame)
 
 	%% -- APPLYING THE HAMMING WINDOW -- %%
 	frame_w = apply_hamming(frame);
@@ -22,15 +22,10 @@ function [bitstream,fstate] = ALS_Coder(frame,state,ini)
     P = parcor2lpc(K_d);
     
     %% -- LPC PREDICTOR -- %%
-    if(ini==1)
-    	zero_frame = int16(zeros(length(frame),1));
-		[frame_p,fstate] = filter(P,1,zero_frame,state);
-	else
-		[frame_p,fstate] = filter(P,1,frame,state);
-	end
+    frame_p = c_predictor(P,prev_frame,frame);
     
     %% -- RESIDUAL SIGNAL -- %%
-    residual = frame-int16(round(frame_p));
+    residual = round(double(frame)-frame_p);
     
     %% -- GOLOMB RICE CODING THE RESIDUAL -- %%
     [stream, m_coded] = golomb_rice_coding(residual);

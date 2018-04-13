@@ -1,7 +1,6 @@
 %% -- ENTROPY CODER OF THE RESIDUAL VALUES USING COLOMB-RICE CODES -- %%
 function [stream, coded_m] = golomb_rice_coding(res)
-    res = double(res);
-    
+
     %% -- DEFINITTION OF VARIABLES -- %%
     mu = mean(abs(res));
     s = floor(log2(mu)+0.97);

@@ -1,7 +1,7 @@
 %% -- ALS_CODER -- %%
 % -- This function acts as a coder -- %%
 
-function [frame,fstate] = ALS_Decoder(bitstream,state,previous_frame)
+function [frame] = ALS_Decoder(bitstream,prev_frame)
 
 	%% -- DEMULTIPLEXING -- %%
 	[stream_alpha,coded_m,stream] = demultiplexing(bitstream);
@@ -19,8 +19,5 @@ function [frame,fstate] = ALS_Decoder(bitstream,state,previous_frame)
 	residual = golomb_rice_decoding(stream,coded_m);
 
 	%% -- DECODER LPC PREDICTOR -- %%
-	[frame_p,fstate] = filter(1,P,previous_frame,state);
-
-	%% -- RECUPERING THE LOSSLESS FRAME -- %%
-	frame = int16(residual+round(frame_p));
+	frame = d_predictor(P,residual,prev_frame);
 end

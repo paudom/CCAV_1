@@ -28,26 +28,27 @@ frame_dec_r = zeros(frame_samples,cols);
 frame_dec_l = zeros(frame_samples,cols);
 
 %% -- ITERATION THROUGH FRAMES -- %%
-
-%% -- INITIALIZATING STATES -- %%
-rstate = [];lstate = [];
-rdstate = [];ldstate = [];
-
+zero_frame = int16(zeros(frame_samples,1));
 for j=1:cols
 	%% -- CODER -- %%
-	[rbitstream,frstate] = ALS_Coder(frame_right(:,j),rstate,j); rstate = frstate;
-	[lbitstream,flstate] = ALS_Coder(frame_left(:,j),lstate,j); lstate = flstate;
-	
+	if(j == 1)
+		[rbitstream] = ALS_Coder(zero_frame,frame_right(:,j));
+		[lbitstream] = ALS_Coder(zero_frame,frame_left(:,j));
+	else
+		[rbitstream] = ALS_Coder(frame_right(:,j-1),frame_right(:,j)); 
+		[lbitstream] = ALS_Coder(frame_left(:,j-1),frame_left(:,j));
+    end
 	%% -- DECODER -- %%
 	if(j == 1)
-        zero_frame = int16(zeros(frame_samples,1));
-		[frame_dec_r(:,j),frdstate] = ALS_Decoder(rbitstream,rstate,zero_frame); rdstate = frdstate;
-		[frame_dec_l(:,j),fldstate] = ALS_Decoder(lbitstream,lstate,zero_frame); ldstate = fldstate;
+		[frame_dec_r(:,j)] = ALS_Decoder(rbitstream,zero_frame);
+		[frame_dec_l(:,j)] = ALS_Decoder(lbitstream,zero_frame);
 	else
-		[frame_dec_r(:,j),frdstate] = ALS_Decoder(rbitstream,rstate,frame_dec_r(:,j-1)); rdstate = frdstate;
-		[frame_dec_l(:,j),fldstate] = ALS_Decoder(lbitstream,lstate,frame_dec_l(:,j-1)); ldstate = fldstate;
+		[frame_dec_r(:,j)] = ALS_Decoder(rbitstream,frame_dec_r(:,j-1));
+		[frame_dec_l(:,j)] = ALS_Decoder(lbitstream,frame_dec_l(:,j-1));
 	end
 end
+frame_dec_r = int16(frame_dec_r);
+frame_dec_l = int16(frame_dec_l);
 %% -- RECONSTRUCTING AUDIO -- %%
 output = audio_reconstructor(frame_dec_r,frame_dec_l);
 filename = strcat('Dec_',mus);
