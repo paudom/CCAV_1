@@ -1,10 +1,10 @@
 %% -- ALS_CODER -- %%
 % -- This function acts as a coder -- %%
 
-function [bitstream] = ALS_Coder(prev_frame,frame)
+function [bitstream] = ALS_Coder(prev_frame,frame,w)
 
 	%% -- APPLYING THE HAMMING WINDOW -- %%
-	frame_w = apply_hamming(frame);
+	frame_w = double(frame).*w;
 
 	%% -- LEVINSON DURBIN -- %%
 	K = levinson_durbin(frame_w);
@@ -25,7 +25,7 @@ function [bitstream] = ALS_Coder(prev_frame,frame)
     frame_p = c_predictor(P,prev_frame,frame);
     
     %% -- RESIDUAL SIGNAL -- %%
-    residual = round(double(frame)-frame_p);
+    residual = round(double(frame)+frame_p);
     
     %% -- GOLOMB RICE CODING THE RESIDUAL -- %%
     [stream, m_coded] = golomb_rice_coding(residual);

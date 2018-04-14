@@ -14,13 +14,12 @@ function [stream, coded_m] = golomb_rice_coding(res)
     %% -- CODING M VALUE OF GOLOMB RICE -- %%
     coded_m = dec2bin(m,mbits);
 
+    %% -- MERGE POSITIVES AND NEGATIVES -- %%
+    ind_pos = find(res > 0); res(ind_pos) = 2*res(ind_pos);
+    ind_neg = find(res < 0); res(ind_neg) = -2*res(ind_neg)-1;
+
     %% -- CODING THE RESIDUAL -- %%
     for i=1:length(res)
-        if(res(i)>0)
-            res(i) = 2*res(i);
-        else
-            res(i) = -2*res(i)-1;
-        end
         q(i) = floor(res(i)/m);
         r(i) = res(i)-q(i)*m;
         s_rem = dec2bin(r(i),rembits);

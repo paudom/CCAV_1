@@ -6,7 +6,7 @@ function [P] = parcor2lpc(K)
 
     %% -- CONVERTING PARCOR TO LPC -- %%
     a(1,1) = 1;
-    for p=1:length(K)-1
+    for p=1:length(K)
         if(p>1)
             a(1,p+1) = 1;
             for i = 2:p
