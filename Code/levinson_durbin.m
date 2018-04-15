@@ -3,7 +3,7 @@ function [ K ] = levinson_durbin(frame)
 
 	%% -- DEFINITION VARIABLES -- %%
 	N = length(frame);
- 	pmax = 8;
+ 	pmax = 12;
  	a = zeros(pmax,pmax); K = zeros(1,pmax);
  	A = zeros(1,pmax); J = zeros(1,pmax);
 %   	b = zeros(1,pmax);

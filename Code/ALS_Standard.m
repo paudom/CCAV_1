@@ -8,7 +8,7 @@ clc
 
 %% -- AUDIO READING -- %%
 path_mus = 'Musica';
-mus = 'Beth_1.flac';
+mus = 'Woo_1.flac';
 path_code = '/Volumes/Productions/Alternas/UPC/4A/CCAV/CCAV_1/Code';
 cd(path_mus);
 [audio_signal,Fs] = audioread(mus,'native');
